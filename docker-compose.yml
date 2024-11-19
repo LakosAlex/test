@@ -97,8 +97,7 @@ services:
     depends_on:
       - mysql_springboot
       - keycloak
-    networks:
-      - my_network
+    network_mode: host
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"] # Spring Boot health check
       interval: 5s

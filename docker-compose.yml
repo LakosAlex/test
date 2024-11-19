@@ -77,7 +77,7 @@ services:
 
   springboot:
     build: .
-    image: lakosalexx/officerbackend:v1.0
+    image: lakosalexx/officer_backend:v1.0
     environment:
       - ACCESS_TOKEN_KEY=access_token
       - AUTH_ADMIN_CLIENT_ID=admin-cli

@@ -13,7 +13,7 @@ services:
     networks:
       - my_network
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
       retries: 5
       start_period: 30s
@@ -28,13 +28,13 @@ services:
       - MYSQL_PASSWORD=password
       - MYSQL_ROOT_PASSWORD=root_password
     ports:
-      - 3307:3306 # Expose on a different port to avoid conflict
+      - 3307:3306  # Expose on a different port to avoid conflict
     volumes:
       - mysql_keycloak_data:/var/lib/mysql
     networks:
       - my_network
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
       retries: 5
       start_period: 30s
@@ -66,8 +66,8 @@ services:
       - DB_DATABASE=keycloak
       - DB_USER=keycloak
       - DB_PASSWORD=password
-      - KEYCLOAK_HTTP_ENABLED=true
-      - KEYCLOAK_HTTPS_ENABLED=false
+      - KEYCLOAK_HTTP_ENABLED=true  
+      - KEYCLOAK_HTTPS_ENABLED=false 
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     depends_on:
@@ -76,15 +76,16 @@ services:
       - my_network
 
   springboot:
-    ports:
-      - 8080:8080
+    build: .
     image: lakosalexx/officerbackend:v1.0
+    ports:
+      - "8080:8080"
     environment:
       - ACCESS_TOKEN_KEY=access_token
       - AUTH_ADMIN_CLIENT_ID=admin-cli
       - AUTH_ADMIN_CLIENT_PASSWORD=admin
       - AUTH_ADMIN_CLIENT_USERNAME=admin
-      - AUTH_BASE_URL=http://vps-5884ed77.vps.ovh.net:8443/auth/
+      - AUTH_BASE_URL=http://keycloak:8443/auth
       - AUTH_CLIENT_ID=officer-client
       - AUTH_REALM_NAME_OR_TENANT_ID=Officer
       - AUTH_SERVICE_NAME=keycloak
@@ -96,19 +97,19 @@ services:
     depends_on:
       - mysql_springboot
       - keycloak
-    network_mode: bridge 
+    networks:
+      - my_network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"] # Spring Boot health check
       interval: 5s
       retries: 20
       start_period: 5s
       timeout: 10s
-    restart: on-failure
+    restart: on-failure  # Ensure Spring Boot app retries if it fails initially
 
 volumes:
   mysql_springboot_data:
   mysql_keycloak_data:
-
 
 networks:
   my_network:

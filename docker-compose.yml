@@ -10,14 +10,14 @@ services:
     volumes:
       - mysql_springboot_data:/var/lib/mysql
       - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
-    networks:
-      - my_network
+    
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
       interval: 30s
       retries: 5
       start_period: 30s
       timeout: 10s
+    network_mode: host
 
   # MySQL for Keycloak
   mysql_keycloak:
@@ -31,14 +31,14 @@ services:
       - 3307:3306 # Expose on a different port to avoid conflict
     volumes:
       - mysql_keycloak_data:/var/lib/mysql
-    networks:
-      - my_network
+   
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
       interval: 30s
       retries: 5
       start_period: 30s
       timeout: 10s
+    network_mode: host
 
   # PhpMyAdmin for springboot MySQL
   phpmyadmin:
@@ -50,8 +50,8 @@ services:
     environment:
       PMA_HOST: mysql_springboot
       PMA_PORT: 3306
-    networks:
-      - my_network
+    network_mode: host
+
 
   # Keycloak service
   keycloak:
@@ -68,12 +68,12 @@ services:
       - DB_PASSWORD=password
       - KEYCLOAK_HTTP_ENABLED=true
       - KEYCLOAK_HTTPS_ENABLED=false
+    network_mode: host 
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     depends_on:
       - mysql_keycloak
-    networks:
-      - my_network
+  
 
   springboot:
     build: .

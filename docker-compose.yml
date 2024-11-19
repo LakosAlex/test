@@ -9,7 +9,6 @@ services:
       - 3306:3306
     volumes:
       - mysql_springboot_data:/var/lib/mysql
-      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
     networks:
       - my_network
     healthcheck:

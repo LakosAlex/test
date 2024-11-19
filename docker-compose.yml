@@ -90,7 +90,7 @@ services:
       - REFRESH_TOKEN_KEY=refresh_token
       - SESSION_ID_KEY=JSESSIONID
       - SPRING_DATASOURCE_PASSWORD=admin
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_springboot:3306/test_db
+      - SPRING_DATASOURCE_URL=jdbc:mysql://vps-5884ed77.vps.ovh.net:3306/test_db
       - SPRING_DATASOURCE_USERNAME=root
     depends_on:
       - mysql_springboot

@@ -19,6 +19,27 @@ services:
       start_period: 30s
       timeout: 10s
 
+  # MySQL for Keycloak
+  mysql_keycloak:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root_password
+    ports:
+      - 3307:3306  # Expose on a different port to avoid conflict
+    volumes:
+      - mysql_keycloak_data:/var/lib/mysql
+    networks:
+      - my_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
   # PhpMyAdmin for springboot MySQL
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -32,8 +53,29 @@ services:
     networks:
       - my_network
 
+  # Keycloak service
+  keycloak:
+    image: quay.io/keycloak/keycloak:16.0.0
+    ports:
+      - 8443:8080
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=mysql
+      - DB_ADDR=mysql_keycloak
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_PASSWORD=password
+    volumes:
+      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
+    depends_on:
+      - mysql_keycloak
+    networks:
+      - my_network
+
 volumes:
   mysql_springboot_data:
+  mysql_keycloak_data:
 
 networks:
   my_network:

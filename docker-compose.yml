@@ -66,6 +66,8 @@ services:
       - DB_DATABASE=keycloak
       - DB_USER=keycloak
       - DB_PASSWORD=password
+      - KEYCLOAK_HTTP_ENABLED=true  
+      - KEYCLOAK_HTTPS_ENABLED=false 
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     depends_on:

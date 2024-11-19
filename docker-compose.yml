@@ -107,7 +107,7 @@ services:
     # Frontend (Vue.js) service
   frontend:
     build: .
-    image: lakosalexx/officer_frontend:v1.0 
+    image: lakosalexx/officer_frontend:v2.0 
     ports:
       - "3000:80"  
     depends_on:

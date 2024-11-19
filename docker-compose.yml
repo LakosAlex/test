@@ -75,6 +75,32 @@ services:
     networks:
       - my_network
 
+  springboot:
+    build: .
+    image: lakosalexx/officerbackend:v1.0
+    ports:
+      - "8080:8080"
+    environment:
+      - ACCESS_TOKEN_KEY=access_token
+      - AUTH_ADMIN_CLIENT_ID=admin-cli
+      - AUTH_ADMIN_CLIENT_PASSWORD=admin
+      - AUTH_ADMIN_CLIENT_USERNAME=admin
+      - AUTH_BASE_URL=http://host.docker.internal:8443/auth
+      - AUTH_CLIENT_ID=officer-client
+      - AUTH_REALM_NAME_OR_TENANT_ID=Officer
+      - AUTH_SERVICE_NAME=keycloak
+      - REFRESH_TOKEN_KEY=refresh_token
+      - SESSION_ID_KEY=JSESSIONID
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_springboot:3306/test_db
+      - SPRING_DATASOURCE_USERNAME=root
+    depends_on:
+      - mysql_springboot
+      - keycloak
+    networks:
+      - my_network
+    restart: on-failure  # Ensure Spring Boot app retries if it fails initially
+
 volumes:
   mysql_springboot_data:
   mysql_keycloak_data:

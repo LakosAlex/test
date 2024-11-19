@@ -76,7 +76,8 @@ services:
       - my_network
 
   springboot:
-    build: .
+    ports:
+      - 8080:8080
     image: lakosalexx/officerbackend:v1.0
     environment:
       - ACCESS_TOKEN_KEY=access_token

@@ -104,18 +104,6 @@ services:
       timeout: 10s
     restart: on-failure  # Ensure Spring Boot app retries if it fails initially
 
-    # Frontend (Vue.js) service
-  frontend:
-    build: .
-    image: lakosalexx/officer-frontend:v2.0 
-    ports:
-      - "3000:80"  
-    depends_on:
-      - springboot  
-    networks:
-      - my_network
-    restart: always 
-
 volumes:
   mysql_springboot_data:
   mysql_keycloak_data:
